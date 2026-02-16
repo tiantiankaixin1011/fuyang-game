@@ -1,0 +1,36 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>福牌·像素翻牌游戏</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 像素字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-wrapper">
+        <h1>❤️ 福牌·像素九宫格 ❤️</h1>
+
+        <!-- 祝福语模块 -->
+        <div class="bless-area">
+            <div class="bless-label">🔮 念句吉祥话 再翻牌 ↓</div>
+            <input type="text" class="bless-input" id="blessInput" placeholder="例如: 岁岁平安" value="新年大吉" maxlength="20">
+            <button class="bless-btn" id="applyBlessBtn">🙏 祝福·开牌</button>
+            <div class="bless-reminder" id="blessHint">当前祝福: 新年大吉 (点击格子消耗)</div>
+        </div>
+
+        <!-- 九宫格 -->
+        <div class="grid" id="cardGrid"></div>
+
+        <!-- 底部状态 -->
+        <div class="status-panel">
+            <div class="counter-box" id="flipCounter">翻开 0/3</div>
+            <button class="reset-btn" id="resetGame">🀄️ 重新洗牌</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
