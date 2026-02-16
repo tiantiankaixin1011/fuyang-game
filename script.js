@@ -1,14 +1,14 @@
 // 卡片数据 - 九宫格内容
 var cardsData = [
-    { pairId: 1, number: '一', text: '手机比纸', image: 'images/shouji-bizhi.jpg'},
-    { pairId: 1, number: '二', text: '平板比纸', image: 'images/pingban-bizhi.jpg'},
-    { pairId: 2, number: '三', text: '小比的小红包', image: 'images/xiaohongbao-xiao.jpg'},
-    { pairId: 2, number: '四', text: '小比的大红包', image: 'images/xiaohongbao-da.jpg'},
-    { pairId: 3, number: '五', text: '可爱窗花', image: 'images/keai-chuanghua.jpg'},
-    { pairId: 3, number: '六', text: '我踏马来啦', image: 'images/wotamalaila.gif'},
-    { pairId: 4, number: '七', text: '过年条漫', image: 'images/guonian-tiaoman.jpg'},
-    { pairId: 4, number: '八', text: '新春小卡'},
-    { pairId: 0, number: '九', text: '福到了', image: 'images/fudaole.jpg'}
+    { pairId: 1, number: '一', text: '手机比纸', image: 'images/shouji-bizhi.jpg' },
+    { pairId: 1, number: '二', text: '平板比纸', image: 'images/pingban-bizhi.jpg' },
+    { pairId: 2, number: '三', text: '小比的小红包', image: 'images/xiaohongbao-xiao.jpg' },
+    { pairId: 2, number: '四', text: '小比的大红包', image: 'images/xiaohongbao-da.jpg' },
+    { pairId: 3, number: '五', text: '可爱窗花', image: 'images/keai-chuanghua.jpg' },
+    { pairId: 3, number: '六', text: '我踏马来啦', image: 'images/wotamalaila.gif' },
+    { pairId: 4, number: '七', text: '过年条漫', image: 'images/guonian-tiaoman.jpg' },
+    { pairId: 4, number: '八', text: '新春小卡', image: 'images/xinchun-xiaoka.jpg' },
+    { pairId: 0, number: '九', text: '福到了', image: 'images/fudaole.jpg' }
 ];
 
 // 游戏状态
@@ -17,9 +17,7 @@ var flippedIndices = [];
 var matchedPairs = [];
 var currentBless = '新年大吉';
 var waitForBless = false;
-
-// 一次最多翻开5张
-var MAX_FLIP = 5;
+var remainingFlips = 0;  // 剩余可翻牌次数
 
 // DOM 元素
 var gridEl = document.getElementById('cardGrid');
@@ -61,11 +59,12 @@ function initGame() {
     cards = freshCards;
     flippedIndices = [];
     matchedPairs = [];
+    remainingFlips = 0;
     renderGrid();
     updateCounter();
 }
 
-// 渲染网格 - 点击图片在新窗口打开（不能直接保存）
+// 渲染网格
 function renderGrid() {
     var html = '';
     for (var i = 0; i < cards.length; i++) {
@@ -85,7 +84,7 @@ function renderGrid() {
 
 // 更新计数
 function updateCounter() {
-    flipCounterEl.innerText = '翻开 ' + flippedIndices.length + '/' + MAX_FLIP;
+    flipCounterEl.innerText = '剩余翻牌: ' + remainingFlips + '/5';
 }
 
 // 检查能否翻牌
@@ -95,6 +94,10 @@ function canFlipCard(index) {
     if (card.flipped) return false;
     if (!waitForBless) {
         alert('🧧 要先输入祝福语，然后点击【祝福·开牌】才能翻哦！');
+        return false;
+    }
+    if (remainingFlips <= 0) {
+        alert('✨ 这次祝福已经用完啦，再输入一句祝福吧！');
         return false;
     }
     return true;
@@ -107,6 +110,7 @@ function flipCard(index) {
 
     card.flipped = true;
     flippedIndices.push(index);
+    remainingFlips--;  // 消耗一次翻牌机会
 
     // 检查配对 (非独牌)
     if (card.pairId !== 0) {
@@ -138,35 +142,14 @@ function flipCard(index) {
         }
     }
 
-    // 超过最大翻开数处理
-    if (flippedIndices.length > MAX_FLIP) {
-        var removed = false;
-        for (var m = 0; m < flippedIndices.length; m++) {
-            var idxToCheck = flippedIndices[m];
-            if (!cards[idxToCheck].matched && cards[idxToCheck].pairId !== 0) {
-                cards[idxToCheck].flipped = false;
-                var tempArray = [];
-                for (var n = 0; n < flippedIndices.length; n++) {
-                    if (n !== m) tempArray.push(flippedIndices[n]);
-                }
-                flippedIndices = tempArray;
-                removed = true;
-                break;
-            }
-        }
-        if (!removed && flippedIndices.length > MAX_FLIP) {
-            var firstIdx = flippedIndices[0];
-            cards[firstIdx].flipped = false;
-            var newArray = [];
-            for (var p = 1; p < flippedIndices.length; p++) {
-                newArray.push(flippedIndices[p]);
-            }
-            flippedIndices = newArray;
-        }
-    }
-
     renderGrid();
     updateCounter();
+
+    // 用完翻牌机会后自动关闭祝福状态
+    if (remainingFlips <= 0) {
+        waitForBless = false;
+        blessHint.innerText = '⏳ 需要再念祝福才能翻牌';
+    }
 }
 
 // 应用祝福
@@ -177,20 +160,23 @@ function applyBless() {
     }
     currentBless = newBless;
     waitForBless = true;
-    blessHint.innerText = '✨ 当前祝福: "' + currentBless + '" (可翻牌)';
+    remainingFlips = 5;  // 每次祝福获得5次翻牌机会
+    blessHint.innerText = '✨ 当前祝福: "' + currentBless + '" (剩余5次)';
     blessInput.value = '';
+    updateCounter();
 }
 
 // 重置游戏
 function resetGame() {
     initGame();
     waitForBless = false;
+    remainingFlips = 0;
     blessHint.innerText = '⏳ 需要念祝福才能翻牌';
     currentBless = '新年大吉';
     blessInput.value = '';
 }
 
-// 事件监听 - 一次祝福翻多张（不消耗祝福）
+// 事件监听
 gridEl.addEventListener('click', function(e) {
     var cardDiv = e.target.closest('.card');
     if (!cardDiv) return;
@@ -200,7 +186,6 @@ gridEl.addEventListener('click', function(e) {
     if (!canFlipCard(index)) return;
 
     flipCard(index);
-    // 不消耗祝福，可以连续翻牌
 });
 
 applyBlessBtn.addEventListener('click', applyBless);
@@ -209,4 +194,5 @@ resetBtn.addEventListener('click', resetGame);
 // 启动游戏
 initGame();
 waitForBless = false;
+remainingFlips = 0;
 blessHint.innerText = '⏳ 需要念祝福才能翻牌';
