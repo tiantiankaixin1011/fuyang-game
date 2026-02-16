@@ -1,4 +1,3 @@
-javascript
 // 卡片数据 - 九宫格内容
 const cardsData = [
     { pairId: 1, number: '一', text: '手机比纸' },
@@ -179,3 +178,4 @@ resetBtn.addEventListener('click', resetGame);
 initGame();
 waitForBless = false;
 blessHint.innerText = `⏳ 需要念祝福才能翻牌`;
+
