@@ -1,6 +1,6 @@
 // 卡片数据 - 九宫格内容
-const cardsData = [
-const cardsData = [
+var cardsData = [
+var cardsData = [
     { pairId: 1, number: '一', text: '手机比纸', image: 'images/shouji-bizhi.jpg'},
     { pairId: 1, number: '二', text: '平板比纸', image: 'images/pingban-bizhi.jpg'},
     { pairId: 2, number: '三', text: '小比的小红包', image: 'images/xiaohongbao-xiao.jpg'},
@@ -19,15 +19,15 @@ let matchedPairs = [];
 let currentBless = '新年大吉';
 let waitForBless = false;
 
-const MAX_FLIP = 3;
+var MAX_FLIP = 3;
 
 // DOM 元素
-const gridEl = document.getElementById('cardGrid');
-const flipCounterEl = document.getElementById('flipCounter');
-const blessInput = document.getElementById('blessInput');
-const applyBlessBtn = document.getElementById('applyBlessBtn');
-const blessHint = document.getElementById('blessHint');
-const resetBtn = document.getElementById('resetGame');
+var gridEl = document.getElementById('cardGrid');
+var flipCounterEl = document.getElementById('flipCounter');
+var blessInput = document.getElementById('blessInput');
+var applyBlessBtn = document.getElementById('applyBlessBtn');
+var blessHint = document.getElementById('blessHint');
+var resetBtn = document.getElementById('resetGame');
 
 // 初始化祝福提示
 blessHint.innerText = `当前祝福: ${currentBless} (点格子消耗)`;
@@ -35,7 +35,7 @@ blessHint.innerText = `当前祝福: ${currentBless} (点格子消耗)`;
 // 洗牌函数
 function shuffleArray(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        var j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
@@ -61,8 +61,8 @@ function initGame() {
 function renderGrid() {
     let html = '';
     cards.forEach((card, idx) => {
-        const flippedClass = card.flipped ? 'flipped' : '';
-        const matchedClass = card.matched ? 'matched' : '';
+        var flippedClass = card.flipped ? 'flipped' : '';
+        var matchedClass = card.matched ? 'matched' : '';
         html += `<div class="card ${flippedClass} ${matchedClass}" data-index="${idx}">
             <div class="card-front">${card.text}</div>
             <div class="card-back">${card.number}</div>
@@ -78,7 +78,7 @@ function updateCounter() {
 
 // 检查能否翻牌
 function canFlipCard(index) {
-    const card = cards[index];
+    var card = cards[index];
     if (card.matched) return false;
     if (card.flipped) return false;
     if (!waitForBless) {
@@ -90,7 +90,7 @@ function canFlipCard(index) {
 
 // 翻开卡片
 function flipCard(index) {
-    const card = cards[index];
+    var card = cards[index];
     if (card.flipped || card.matched) return;
 
     // 翻开
@@ -99,13 +99,13 @@ function flipCard(index) {
 
     // 检查配对 (非独牌)
     if (card.pairId !== 0) {
-        const samePairFlipped = flippedIndices.filter(i => {
-            const c = cards[i];
+        var samePairFlipped = flippedIndices.filter(i => {
+            var c = cards[i];
             return c.pairId === card.pairId && !c.matched && c.pairId !== 0;
         });
 
         if (samePairFlipped.length >= 2) {
-            const pairToMatch = samePairFlipped.slice(0, 2);
+            var pairToMatch = samePairFlipped.slice(0, 2);
             pairToMatch.forEach(i => {
                 cards[i].matched = true;
                 cards[i].flipped = true;
@@ -119,7 +119,7 @@ function flipCard(index) {
     if (flippedIndices.length > MAX_FLIP) {
         let removed = false;
         for (let i = 0; i < flippedIndices.length; i++) {
-            const idx = flippedIndices[i];
+            var idx = flippedIndices[i];
             if (!cards[idx].matched && cards[idx].pairId !== 0) {
                 cards[idx].flipped = false;
                 flippedIndices.splice(i, 1);
@@ -128,7 +128,7 @@ function flipCard(index) {
             }
         }
         if (!removed && flippedIndices.length > MAX_FLIP) {
-            const firstIdx = flippedIndices.shift();
+            var firstIdx = flippedIndices.shift();
             cards[firstIdx].flipped = false;
         }
     }
@@ -160,9 +160,9 @@ function resetGame() {
 
 // 事件监听
 gridEl.addEventListener('click', (e) => {
-    const cardDiv = e.target.closest('.card');
+    var cardDiv = e.target.closest('.card');
     if (!cardDiv) return;
-    const index = parseInt(cardDiv.dataset.index, 10);
+    var index = parseInt(cardDiv.dataset.index, 10);
     if (isNaN(index)) return;
 
     if (!canFlipCard(index)) return;
@@ -179,5 +179,6 @@ resetBtn.addEventListener('click', resetGame);
 initGame();
 waitForBless = false;
 blessHint.innerText = `⏳ 需要念祝福才能翻牌`;
+
 
 
