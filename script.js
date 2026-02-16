@@ -18,7 +18,8 @@ var matchedPairs = [];
 var currentBless = '新年大吉';
 var waitForBless = false;
 
-var MAX_FLIP = 3;
+// 👇 修改这里：从3改成5
+var MAX_FLIP = 5;
 
 // DOM 元素
 var gridEl = document.getElementById('cardGrid');
@@ -190,7 +191,7 @@ function resetGame() {
     blessInput.value = '';
 }
 
-// 事件监听
+// 事件监听 - 👇 这里注释掉了消耗祝福的代码
 gridEl.addEventListener('click', function(e) {
     var cardDiv = e.target.closest('.card');
     if (!cardDiv) return;
@@ -200,8 +201,9 @@ gridEl.addEventListener('click', function(e) {
     if (!canFlipCard(index)) return;
 
     flipCard(index);
-    waitForBless = false;
-    blessHint.innerText = '⏳ 需要再念祝福才能翻下一张';
+    // 下面两行被注释掉，所以不会消耗祝福
+    // waitForBless = false;
+    // blessHint.innerText = '⏳ 需要再念祝福才能翻下一张';
 });
 
 applyBlessBtn.addEventListener('click', applyBless);
