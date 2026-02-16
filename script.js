@@ -1,14 +1,15 @@
 // 卡片数据 - 九宫格内容
 const cardsData = [
-    { pairId: 1, number: '一', text: '手机比纸' },
-    { pairId: 1, number: '二', text: '平板比纸' },
-    { pairId: 2, number: '三', text: '小比的小红包' },
-    { pairId: 2, number: '四', text: '小比的大红包' },
-    { pairId: 3, number: '五', text: '可爱窗花' },
-    { pairId: 3, number: '六', text: '我踏马来啦' },
-    { pairId: 4, number: '七', text: '过年条漫' },
-    { pairId: 4, number: '八', text: '新春小卡' },
-    { pairId: 0, number: '九', text: '福到了' }    // 独牌，永不消除
+const cardsData = [
+    { pairId: 1, number: '一', text: '手机比纸', image: 'images/shouji-bizhi.jpg'},
+    { pairId: 1, number: '二', text: '平板比纸', image: 'images/pingban-bizhi.jpg'},
+    { pairId: 2, number: '三', text: '小比的小红包', image: 'images/xiaohongbao-xiao.jpg'},
+    { pairId: 2, number: '四', text: '小比的大红包', image: 'images/xiaohongbao-da.jpg'},
+    { pairId: 3, number: '五', text: '可爱窗花', image: 'images/keai-chuanghua.jpg'},
+    { pairId: 3, number: '六', text: '我踏马来啦', image: 'images/wotamalaila.gif'},
+    { pairId: 4, number: '七', text: '过年条漫', image: 'images/guonian-tiaoman.jpg'},
+    { pairId: 4, number: '八', text: '新春小卡'},
+    { pairId: 0, number: '九', text: '福到了', image: 'images/fudaole.jpg'}
 ];
 
 // 游戏状态
@@ -178,4 +179,5 @@ resetBtn.addEventListener('click', resetGame);
 initGame();
 waitForBless = false;
 blessHint.innerText = `⏳ 需要念祝福才能翻牌`;
+
 
